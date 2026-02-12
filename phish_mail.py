@@ -14,6 +14,7 @@ class Colors:
     YELLOW = '\033[93m'
     RED = '\033[91m'
     BLUE = '\033[94m'
+    CYAN = '\033[96m' # Nachgetragen, da im Original in show_alert verwendet
     CLEAR = '\033[0m'
     BOLD = '\033[1m'
 
@@ -49,36 +50,30 @@ very well if the internal gateway allows emails from pentest machines.
 
 def show_alert():
     clear()
-    alert = f"""{Colors.RED}
-                      /\\   | |         | |   | | | |
-                     /  \\  | | ___ _ __| |_  | | | |
-                    / /\\ \\ | |/ _ \\ '__| __| | | | |
-                   / ____ \\| |  __/ |  | |_  |_| |_|
-                  /_/    \\_\\_|\\___|_|   \\__| (_) (_)
-                                   
-
-    <><><><><><><><><><><><><><><ALERT!><><><><><><><><><><><><><><><>
-    ! This tool is intended solely for educational and awareness     !
-    ! purposes about the dangers of phishing. Using this tool in     !
-    ! unauthorized environments or for malicious activities is       !
-    ! strictly prohibited.                                           !
-    <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-    !                                                                !     
-    ! By running this tool, you agree to use it ethically and        !
-    ! responsibly. We are not responsible for any misuse or illegal  ! 
-    ! use of this tool. Be sure to obtain proper consent before      !
-    ! conducting awareness tests.                                    ! 
-    <><><><><><><><><><><><><><><ALERT!><><><><><><><><><><><><><><><>
-    {Colors.CLEAR}"""
+    alert = f"""
+    {Colors.RED}{Colors.BOLD}┌──────────────────────────────────────────────────────────────────────────┐
+    │                            LEGAL DISCLAIMER                              │
+    ├──────────────────────────────────────────────────────────────────────────┤
+    │                                                                          │
+    │  {Colors.YELLOW}WARNING:{Colors.RED} This tool is for EDUCATIONAL and AUTHORIZED testing only.      │
+    │                                                                          │
+    │  1. Unauthorized use of this tool is strictly prohibited.                │
+    │  2. You must have explicit written consent from the target.              │
+    │  3. The author is NOT responsible for any misuse or legal actions.       │
+    │                                                                          │
+    │  By continuing, you confirm you are acting as an ethical professional.   │
+    │                                                                          │
+    └──────────────────────────────────────────────────────────────────────────┘{Colors.CLEAR}
+    """
     print(alert)
-    consent = input(f"{Colors.BLUE}Do you agree? ({Colors.GREEN}yes{Colors.BLUE} or {Colors.RED}no{Colors.BLUE})> {Colors.CLEAR}")
+    consent = input(f"    {Colors.CYAN}Do you agree to these terms? ({Colors.GREEN}yes{Colors.CYAN}/{Colors.RED}no{Colors.CYAN})> {Colors.CLEAR}")
     
     if consent.lower() == 'yes':
-        print(f"\n{Colors.GREEN}[+] I have permission and am authorized to perform this pentest.{Colors.CLEAR}")
+        print(f"\n    {Colors.GREEN}[✓] Authorization confirmed. Initializing core modules...{Colors.CLEAR}")
         time.sleep(1.5)
         return True
     else:
-        print(f"\n{Colors.RED}[!] Access Denied.{Colors.CLEAR}")
+        print(f"\n    {Colors.RED}[!] Session terminated. Access Denied.{Colors.CLEAR}")
         sys.exit()
 
 def banner():
@@ -137,7 +132,9 @@ def main():
         print("99) exit ")
         
         try:
-            choice = int(input(f"\n{Colors.BLUE}Choice> {Colors.CLEAR}"))
+            choice_input = input(f"\n{Colors.BLUE}Choice> {Colors.CLEAR}")
+            if not choice_input: continue
+            choice = int(choice_input)
         except ValueError:
             continue
 
@@ -146,7 +143,6 @@ def main():
             
             host = input("Relay/SMTP Server (z.B. localhost oder mail.server.de): ").strip()
             
-            # Prüfung ob Host leer ist
             if not host:
                 print(f"{Colors.RED}[!] Error: You must enter a relay or an SMTP server.{Colors.CLEAR}")
                 time.sleep(2)
@@ -194,7 +190,7 @@ def main():
             elif mode == '2':
                 list_path = input("Path to email list (one email per line): ")
                 try:
-                    with open(list_path, 'r') as f:
+                    with open(list_path, 'r', encoding='utf-8') as f:
                         targets = [line.strip() for line in f if "@" in line]
                 except FileNotFoundError:
                     print(f"{Colors.RED}Error: Email list not found! {Colors.CLEAR}")
@@ -220,14 +216,14 @@ def main():
             print(f"\n{Colors.GREEN}{Colors.BOLD}[*] Done! {count}/{len(targets)} Mails sent successfully.{Colors.CLEAR}")
             input("Press Enter to return to the main menu...")
 
-        elif choice == 3: # Help
+        elif choice == 3:
             while True:
                 help_message()
                 entry = input(f"{Colors.YELLOW}Go back to the Main Menu? (yes)> {Colors.CLEAR}")
                 if entry.lower() == 'yes':
                     break
 
-        elif choice == 99: # Exit
+        elif choice == 99:
             print(f"""{Colors.CLEAR}
 Leaving already? Aw, now you owe me a coffee! Help keep my coding sessions fueled
 by donating. Thank youu! 
