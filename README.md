@@ -31,7 +31,7 @@ Using this tool for malicious activities or without explicit written consent fro
    ```bash
    apt update && apt upgrade
    apt install git -y
-   git clone https://github.com/m-turkmani/Phished_Mail.git
+   git clone https://github.com/m-turkmani/phished_mail.git
    cd Phished_Mail
    chmod +x phish_mail.py
 
