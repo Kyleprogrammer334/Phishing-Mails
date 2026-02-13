@@ -1,0 +1,2 @@
+python3-xyzservices
+python3-aiosmtpd
